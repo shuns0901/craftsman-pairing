@@ -228,6 +228,21 @@ const priorityInstruction=`
 優先: ベルギー風ポテトフライ（自家製マヨネーズ添え）
 優先: 窯焼きピッツァ各種（マルゲリータ、ビスマルク、プロシュート、マリナーラ、クアトロフォルマッジ、アボカドと海老、仙台牛とトリュフ、トリュフ、モルタデラハム温泉卵、旬のピッツァ）`;
 
+const GEMINI_KEY='AIzaSyBqBv_ER93yahfHje4TR8mOiVM8sicNJR8';
+
+async function callGemini(systemPrompt, userMessage){
+  const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      systemInstruction:{parts:[{text:systemPrompt}]},
+      contents:[{parts:[{text:userMessage}]}],
+      generationConfig:{responseMimeType:'application/json'}
+    })
+  });
+  const data=await res.json();
+  return JSON.parse(data.candidates[0].content.parts[0].text);
+}
+
 let currentMode="beer",currentBeerCat="all",currentFoodCat="all";
 
 function setMode(m){currentMode=m;document.getElementById('btn-beer').classList.toggle('active',m==='beer');document.getElementById('btn-food').classList.toggle('active',m==='food');render();}
@@ -289,14 +304,12 @@ async function openBeerModal(b){
   const allFoods=Object.values(foods).flatMap(s=>s.items).map(f=>`- ${f.name}（${f.desc}）${f.cat==='season'?'【季節★最優先】':f.featured?'【ポテトフライ or 窯焼きピザ★優先】':''}`).join('\n');
 
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1400,
-        system:`あなたはCRAFTSMAN Sendaiのビール×イタリアンのペアリング専門家です。
-以下のJSON形式のみで返答してください。他テキスト・Markdownは一切含めないでください。
+    const systemPrompt=`あなたはCRAFTSMAN Sendaiのビール×イタリアンのペアリング専門家です。
+以下のJSON形式のみで返答してください。
 {
   "beer_desc": "このビールの味わい（お客様へ語りかける口調で2文）",
   "aroma": ["香り1","香り2","香り3"],
-  "flavors": {"苦味":0〜10,"甘味":0〜10,"酸味":0〜10,"コク":0〜10},
+  "flavors": {"苦味":0から10の数値,"甘味":0から10の数値,"酸味":0から10の数値,"コク":0から10の数値},
   "pairings": [
     {"name":"料理名（メニューから選ぶ）","dish_desc":"この料理の特徴と見どころ（お客様への説明として1〜2文）","reason":"このビールとの相性の理由（1〜2文）","priority":"best"},
     {"name":"料理名","dish_desc":"...","reason":"...","priority":"good"},
@@ -304,10 +317,9 @@ async function openBeerModal(b){
   ]
 }
 priorityは最もおすすめの1品に"best"、他は"good"。
-${priorityInstruction}`,
-        messages:[{role:'user',content:`ビール: ${b.name} (${b.style}, ABV ${b.abv}%, ${b.origin})\n\n当店の料理メニュー:\n${allFoods}`}]})});
-    const data=await res.json();
-    const info=JSON.parse(data.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim());
+${priorityInstruction}`;
+    const userMessage=`ビール: ${b.name} (${b.style}, ABV ${b.abv}%, ${b.origin})\n\n当店の料理メニュー:\n${allFoods}`;
+    const info=await callGemini(systemPrompt, userMessage);
     renderBeerResult(info);
   }catch(e){document.getElementById('m-ai').innerHTML=`<p style="font-size:13px;color:#c0392b;padding:8px 0">読み込みに失敗しました。再度お試しください。</p>`;}
 }
@@ -322,10 +334,8 @@ async function openFoodModal(f){
   document.getElementById('m-ai').innerHTML=`<div class="ai-loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span style="margin-left:6px;font-size:13px;color:var(--muted)">AIがビールを探しています...</span></div>`;
 
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1400,
-        system:`あなたはCRAFTSMAN Sendaiのビール×イタリアンのペアリング専門家です。
-以下のJSON形式のみで返答してください。他テキスト・Markdownは一切含めないでください。
+    const systemPrompt=`あなたはCRAFTSMAN Sendaiのビール×イタリアンのペアリング専門家です。
+以下のJSON形式のみで返答してください。
 {
   "food_note": "この料理の魅力と特徴（お客様へ語りかける口調で1〜2文）",
   "pairings": [
@@ -336,7 +346,7 @@ async function openFoodModal(f){
       "abv": "X.X%",
       "beer_desc": "このビールの味わいと特徴（1〜2文）",
       "aroma": ["香り1","香り2"],
-      "flavors": {"苦味":0〜10,"甘味":0〜10,"酸味":0〜10,"コク":0〜10},
+      "flavors": {"苦味":0から10の数値,"甘味":0から10の数値,"酸味":0から10の数値,"コク":0から10の数値},
       "reason": "この料理との相性の理由（1〜2文）",
       "priority": "best"
     },
@@ -344,10 +354,9 @@ async function openFoodModal(f){
     {"beer_num":"...","beer_name":"...","style":"...","abv":"...","beer_desc":"...","aroma":[],"flavors":{},"reason":"...","priority":"good"}
   ]
 }
-priorityは最もおすすめの1品に"best"、他は"good"。ビールリストから正確に選んでください。`,
-        messages:[{role:'user',content:`料理: ${f.name}\n説明: ${f.desc}\n\n当店のビールリスト:\n${beerListText}`}]})});
-    const data=await res.json();
-    const info=JSON.parse(data.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim());
+priorityは最もおすすめの1品に"best"、他は"good"。ビールリストから正確に選んでください。`;
+    const userMessage=`料理: ${f.name}\n説明: ${f.desc}\n\n当店のビールリスト:\n${beerListText}`;
+    const info=await callGemini(systemPrompt, userMessage);
     renderFoodResult(info);
   }catch(e){document.getElementById('m-ai').innerHTML=`<p style="font-size:13px;color:#c0392b;padding:8px 0">読み込みに失敗しました。再度お試しください。</p>`;}
 }
