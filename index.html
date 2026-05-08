@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRAFTSMAN Pairing Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{--amber:#C8861A;--amber-light:#FDF3E0;--amber-dark:#7A4F0A;--bg:#FAF8F4;--surface:#FFFFFF;--dark:#1A1510;--mid:#5C4F3A;--muted:#9C8E7A;--border:rgba(90,70,40,0.1);--border-hover:rgba(200,134,26,0.3);--radius:12px;--radius-sm:8px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
+header{background:var(--dark);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo-wrap{display:flex;flex-direction:column}
+.logo-sub{font-size:9px;letter-spacing:.18em;color:var(--amber);text-transform:uppercase;font-weight:500}
+.logo-main{font-family:'DM Serif Display',serif;font-size:22px;color:#fff;letter-spacing:.02em}
+.logo-main em{font-style:italic;color:var(--amber)}
+.logo-num{font-size:32px;color:var(--amber);font-family:'DM Serif Display',serif;line-height:1}
+.mode-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;gap:8px;position:sticky;top:54px;z-index:90}
+.mode-btn{flex:1;padding:10px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500;background:transparent;color:var(--muted);cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px}
+.mode-btn.active{background:var(--dark);border-color:var(--dark);color:#fff}
+.filters{padding:12px 20px;display:flex;gap:6px;overflow-x:auto;background:var(--bg);scrollbar-width:none;border-bottom:1px solid var(--border)}
+.filters::-webkit-scrollbar{display:none}
+.filter-btn{flex-shrink:0;padding:5px 12px;border:1px solid var(--border);border-radius:16px;font-size:12px;font-family:'DM Sans',sans-serif;background:transparent;color:var(--mid);cursor:pointer;transition:all .15s;white-space:nowrap}
+.filter-btn:hover{border-color:var(--amber);color:var(--amber)}
+.filter-btn.active{background:var(--amber);border-color:var(--amber);color:#fff}
+main{padding:16px 20px;max-width:960px;margin:0 auto}
+.section-title{font-family:'DM Serif Display',serif;font-size:16px;color:var(--amber);margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.season-badge{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;background:var(--amber);color:#fff;font-family:'DM Sans',sans-serif}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;transition:all .18s}
+.card:hover{border-color:var(--border-hover);transform:translateY(-2px);box-shadow:0 6px 18px rgba(200,134,26,.1)}
+.card.season{border-color:rgba(200,134,26,.3);background:linear-gradient(135deg,#fff 80%,#FDF3E0)}
+.card.featured{border-color:rgba(200,134,26,.25)}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:8px}
+.card-num{font-size:11px;color:var(--muted);font-weight:500;flex-shrink:0}
+.badges{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.badge{font-size:10px;padding:2px 6px;border-radius:8px;font-weight:500}
+.b-local{background:#E8F4E8;color:#2D6A2D}
+.b-rare{background:#1A1510;color:var(--amber)}
+.b-special{background:var(--amber-light);color:var(--amber-dark)}
+.b-season{background:var(--amber);color:#fff}
+.b-pick{background:#1A1510;color:#fff}
+.card-name{font-size:13px;font-weight:500;color:var(--dark);line-height:1.4;margin-bottom:2px}
+.card-sub{font-size:11px;color:var(--muted);line-height:1.4;margin-bottom:8px}
+.card-footer{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.card-tag{font-size:11px;color:var(--mid);background:var(--bg);border-radius:6px;padding:2px 7px}
+.card-abv{font-size:11px;color:var(--muted);margin-left:auto}
+.tap-hint{font-size:11px;color:var(--amber);text-align:right;margin-top:8px;opacity:0;transition:opacity .15s}
+.card:hover .tap-hint{opacity:1}
+.overlay{display:none;position:fixed;inset:0;background:rgba(10,8,5,.6);z-index:200;animation:fadeIn .18s}
+.overlay.active{display:flex;align-items:flex-end;justify-content:center}
+@media(min-width:600px){.overlay.active{align-items:center}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--surface);border-radius:var(--radius) var(--radius) 0 0;padding:22px 20px;width:100%;max-width:540px;max-height:88vh;overflow-y:auto;animation:slideUp .2s ease-out}
+@media(min-width:600px){.modal{border-radius:var(--radius);max-height:82vh}}
+@keyframes slideUp{from{transform:translateY(36px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.modal-name{font-family:'DM Serif Display',serif;font-size:19px;color:var(--dark);line-height:1.3}
+.modal-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.close-btn{background:var(--bg);border:none;width:28px;height:28px;border-radius:50%;font-size:15px;cursor:pointer;color:var(--mid);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:8px}
+.modal-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.meta-chip{font-size:11px;padding:3px 9px;border-radius:8px;background:var(--bg);color:var(--mid)}
+.ai-loading{display:flex;align-items:center;gap:8px;padding:16px 0;color:var(--muted);font-size:13px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--amber);animation:pulse 1.1s ease-in-out infinite}
+.dot:nth-child(2){animation-delay:.18s}
+.dot:nth-child(3){animation-delay:.36s}
+@keyframes pulse{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+.ai-block{margin-bottom:14px}
+.ai-label{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ai-text{font-size:13px;color:var(--dark);line-height:1.7}
+.divider{border:none;border-top:1px solid var(--border);margin:14px 0}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px}
+.tag-amber{font-size:12px;padding:4px 10px;border-radius:10px;background:var(--amber-light);color:var(--amber-dark)}
+.pair-card{border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;background:var(--surface)}
+.pair-card.best{border-color:rgba(200,134,26,.5);background:var(--amber-light)}
+.pair-best-label{font-size:10px;color:var(--amber);font-weight:500;letter-spacing:.06em;margin-bottom:6px}
+.pair-name{font-size:14px;font-weight:500;color:var(--dark);margin-bottom:3px}
+.pair-style{font-size:11px;color:var(--muted);margin-bottom:8px}
+.pair-desc{font-size:12px;color:var(--mid);line-height:1.65;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.pair-reason-label{font-size:10px;color:var(--amber);font-weight:500;letter-spacing:.05em;margin-bottom:4px}
+.pair-reason{font-size:12px;color:var(--dark);line-height:1.65}
+.fl-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+.fl-row{display:flex;align-items:center;gap:6px}
+.fl-label{font-size:11px;color:var(--mid);width:36px;flex-shrink:0}
+.fl-track{flex:1;height:4px;background:#EEE8E0;border-radius:3px;overflow:hidden}
+.fl-fill{height:100%;background:var(--amber);border-radius:3px}
+.fl-val{font-size:10px;color:var(--muted);width:16px;text-align:right}
+footer{text-align:center;padding:28px 20px;color:var(--muted);font-size:11px;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo-wrap">
+    <span class="logo-sub">Craft Beer × Italian Bar</span>
+    <span class="logo-main">CRAFTSMAN <em>Sendai</em></span>
+  </div>
+  <div class="logo-num">31</div>
+</header>
+<div class="mode-bar">
+  <button class="mode-btn active" id="btn-beer" onclick="setMode('beer')"><span>🍺</span> ビールから料理を探す</button>
+  <button class="mode-btn" id="btn-food" onclick="setMode('food')"><span>🍽️</span> 料理からビールを探す</button>
+</div>
+<div id="filter-bar"></div>
+<main id="main-content"></main>
+<footer>CRAFTSMAN Sendai — Beer & Food Pairing Guide</footer>
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-head">
+      <div><div class="modal-name" id="m-name"></div><div class="modal-sub" id="m-sub"></div></div>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-meta" id="m-meta"></div>
+    <div id="m-ai"></div>
+  </div>
+</div>
+<script>
+const beers=[
+  {id:1,num:"①",name:"Asahi Super Dry",ja:"アサヒ スーパードライ",style:"Pilsner",abv:5.0,origin:"Japanese",cat:["japanese"]},
+  {id:2,num:"②",name:"Ebisu Premium Black",ja:"エビス プレミアムブラック",style:"Black Lager",abv:5.0,origin:"Japanese",cat:["japanese","black"]},
+  {id:3,num:"③",name:"Far Yeast Blonde",ja:"ファーイースト ブロンド",style:"Golden Ale",abv:5.0,origin:"山梨",cat:["lager"],special:true},
+  {id:4,num:"④",name:"Yakurai Grand Hope",ja:"やくらい 東松島グランドホープ",style:"Lager",abv:5.0,origin:"加美町",cat:["lager","local"]},
+  {id:5,num:"⑤",name:"Nude Beer Akebono",ja:"ヌードビア あけぼの",style:"Amber Lager",abv:5.5,origin:"京都",cat:["lager"],special:true},
+  {id:6,num:"⑥",name:"Great Dane Brewing Great Lager",ja:"グレートデーンブリューイング グレートラガー",style:"Lager",abv:5.0,origin:"秋保",cat:["lager","local"],special:true},
+  {id:7,num:"⑦",name:"Hop Garden Brewery Hop Japan White",ja:"ホップガーデン ホップジャパンホワイト",style:"White Wheat Ale",abv:4.5,origin:"福島",cat:["wheat"],special:true},
+  {id:8,num:"⑧",name:"Mojiko Beer Weizen",ja:"門司港ビール ヴァイツェン",style:"Weizen",abv:5.5,origin:"福岡",cat:["wheat"]},
+  {id:10,num:"⑩",name:"Hoegaarden WHITE",ja:"ヒューガルデン ホワイト",style:"Belgian White",abv:4.9,origin:"Belgium",cat:["wheat"]},
+  {id:11,num:"⑪",name:"Naruko Onsen Brewery Yamabudo",ja:"鳴子温泉ブルワリー 鳴子の風 山ぶどう",style:"Fruit Ale",abv:5.0,origin:"鳴子",cat:["fruit","local"]},
+  {id:12,num:"⑫",name:"Flora Fermentation Frigg",ja:"フローラファーメンテーション フリッグ",style:"Strawberry Milkshake Ale",abv:5.5,origin:"滋賀",cat:["fruit"],special:true},
+  {id:13,num:"⑬",name:"Sunmai Honey Lemon Lager",ja:"サンマイ ハニーレモンラガー",style:"Fruit Lager",abv:5.0,origin:"Taiwan",cat:["fruit"],special:true},
+  {id:14,num:"⑭",name:"Hoegaarden ROSÉE",ja:"ヒューガルデン ロゼ",style:"Fruit Ale",abv:3.0,origin:"Belgium",cat:["fruit"],special:true},
+  {id:15,num:"⑮",name:"ISEKADO Pale Ale",ja:"伊勢角屋麦酒 ペールエール",style:"American Pale Ale",abv:5.0,origin:"三重",cat:["pale"],special:true},
+  {id:16,num:"⑯",name:"Yakurai Fukko Ale",ja:"やくらい 復興エール",style:"American Pale Ale",abv:5.0,origin:"加美町",cat:["pale","local"]},
+  {id:17,num:"⑰",name:"COEDO Marihana",ja:"コエド 毬花",style:"Session IPA",abv:4.5,origin:"埼玉",cat:["ipa"]},
+  {id:18,num:"⑱",name:"Repubrew 69IPA",ja:"リパブリュー 69IPA",style:"West Coast IPA",abv:7.0,origin:"静岡",cat:["ipa"],special:true},
+  {id:19,num:"⑲",name:"Tonewood Brewing Sun Dog",ja:"トーンウッドブリューイング サンドッグ",style:"Imperial IPA",abv:9.0,origin:"New Jersey",cat:["ipa"],rare:true},
+  {id:20,num:"⑳",name:"Asobi Beer Beautiful Spring Day Hazy IPA",ja:"あそびビア 春うらら Hazy IPA",style:"Hazy IPA",abv:5.5,origin:"京都",cat:["ipa"],special:true},
+  {id:21,num:"㉑",name:"Iwatekura Sakura Arashi IPA",ja:"いわて蔵 桜嵐IPA",style:"Japanese IPA",abv:6.0,origin:"岩手",cat:["ipa"],special:true},
+  {id:22,num:"㉒",name:"Ishinomaki Hop Works Makikaze IPA",ja:"イシノマキホップワークス 巻風IPA",style:"West Coast IPA",abv:6.0,origin:"石巻",cat:["ipa","local"]},
+  {id:23,num:"㉓",name:"Sunmai Grapefruit IPA",ja:"サンマイ グレープフルーツIPA",style:"Fruit IPA",abv:6.5,origin:"Taiwan",cat:["ipa"],rare:true},
+  {id:24,num:"㉔",name:"BREWDOG PUNK IPA",ja:"ブリュードッグ パンクIPA",style:"IPA",abv:5.6,origin:"Scotland",cat:["ipa"]},
+  {id:25,num:"㉕",name:"Shiga Kogen Beer Porter",ja:"志賀高原ビール ポーター",style:"Porter",abv:5.5,origin:"長野",cat:["black"]},
+  {id:26,num:"㉖",name:"Dancan's Imperial Pastry Stout -ONE 1130-",ja:"ダンカンズ インペリアルペストリースタウト",style:"Imperial Pastry Stout",abv:10.5,origin:"New Zealand",cat:["black"],rare:true},
+  {id:27,num:"㉗",name:"Iwatekura Oyster Stout",ja:"いわて蔵 オイスタースタウト",style:"Stout",abv:7.0,origin:"岩手",cat:["black"]},
+  {id:29,num:"㉙",name:"Forest Brewing Kitakitsune",ja:"フォレストブリューイング キタキツネ",style:"Doppel Bock",abv:7.0,origin:"川崎町",cat:["special","local"],special:true},
+  {id:30,num:"㉚",name:"Rokko Beer Saison",ja:"六甲ビール セゾン",style:"Saison",abv:5.0,origin:"兵庫",cat:["special"]},
+  {id:31,num:"㉛",name:"Yggdrasil Brewing Ginger Hell",ja:"イグドラジルブリューイング ジンジャーヘル",style:"Spiced Cider",abv:5.0,origin:"神奈川",cat:["cider"],rare:true},
+];
+
+const foods={
+  season:{label:"🌸 季節メニュー",items:[
+    {id:"s1",name:"春キャベツのポテトサラダ",desc:"クミン・マスタードシード・ビネガーでマリネした春キャベツをポテトサラダに",cat:"season"},
+    {id:"s2",name:"砂肝コンフィと蕗のとう 新玉葱ソース",desc:"1時間以上コンフィした砂肝を新玉ねぎと蕗のとうのオイルで。新玉ねぎのソース添え",cat:"season"},
+    {id:"s3",name:"ホタルイカとウドのマリネ",desc:"旬のホタルイカとオイルコンフィしたウド、イカ墨クスクス・おかひじき添え",cat:"season"},
+    {id:"s4",name:"本日の鮮魚のカルパッチョ 甘夏とセロリのソース",desc:"宮城県産銀鮭などの鮮魚、甘夏みかんとセロリのソース、ロメインレタスのサラダ添え",cat:"season"},
+    {id:"s5",name:"山形県産キウイのグリーンサラダ カルダモンドレッシング",desc:"グリーンカール・ルッコラ・クレソンにカルダモンドレッシング、山形キウイ・キヌア・ピンクペッパー",cat:"season"},
+    {id:"s6",name:"東北野菜のグリル しらすとナッツのオイル",desc:"本日の東北産野菜グリル、シラス・クルミ・レーズン・グリーンオリーブのオイルソース",cat:"season"},
+    {id:"s7",name:"山菜といわいどりのペペロンチーノ",desc:"東北産山菜（あさつき・タラの芽・こごみ・うるい）と岩手いわいどりのポルペッティ、オリーブ＆ハラペーニョソース",cat:"season"},
+    {id:"s8",name:"青森県産ベビーホタテと新じゃがのクリームソース カネストリ",desc:"青森産ベビーホタテのクリームパスタ（カネストリ）、アスパラ・バジル添え",cat:"season"},
+    {id:"s9",name:"春野菜と桜エビの空豆クリームソースピッツァ",desc:"空豆クリームソースに東北春野菜（菜の花・アスパラ菜・空豆・スナップエンドウ）と桜エビ",cat:"season",pizza:true},
+    {id:"s10",name:"クルミのティラミス 苺とヴェルモットのソース",desc:"クルミペーストのティラミス、宮城県産苺とヴェルモットのソース（デザート）",cat:"season"},
+    {id:"s11",name:"蔵王ヨーグルトとアプリコットのセミフレッド",desc:"蔵王ヨーグルト×アプリコットのセミフレッド、アマレットリキュールソース（デザート）",cat:"season"},
+  ]},
+  tapas:{label:"🫒 タパス",items:[
+    {id:"t1",name:"アンチョビのポテトサラダ",desc:"Potato Salad with Anchovy",cat:"tapas"},
+    {id:"t2",name:"白インゲン豆とツナ、きのこのサラダ",desc:"White Kidney Beans Salad with Tuna and Mushrooms",cat:"tapas"},
+    {id:"t3",name:"鶏レバーペーストバゲット添え",desc:"Paste of the Chicken Liver",cat:"tapas"},
+    {id:"t4",name:"茄子のカポナータシチリア風",desc:"Caponata of Eggplant",cat:"tapas"},
+    {id:"t5",name:"手羽先のスパイスフリット",desc:"Chicken Wing Spice Fritto",cat:"tapas"},
+    {id:"t6",name:"白身魚とじゃがいものバジルアヒージョ",desc:"Ajillo of Fish and Potato",cat:"tapas"},
+    {id:"t7",name:"砂肝コンフィと旬野菜のマリネ",desc:"Confit of Chicken Gizzard with Seasonal Vegetables",cat:"tapas"},
+    {id:"t8",name:"小エビのフリット",desc:"Small Shrimp Fritto",cat:"tapas"},
+    {id:"t9",name:"タコとじゃがいも、セロリのハーブマリネ",desc:"Marinated Octopus, Potato and Celery",cat:"tapas"},
+    {id:"t10",name:"ハムの盛り合わせ",desc:"Ham Plate",cat:"tapas"},
+    {id:"t11",name:"チーズ盛り合わせ",desc:"Cheese Plate",cat:"tapas"},
+    {id:"t12",name:"ドライフルーツとナッツ",desc:"Dried Fruits and Nuts",cat:"tapas"},
+    {id:"t13",name:"ナチョス ワカモレとサルサソース",desc:"Nachos with Guacamole and Salsa",cat:"tapas"},
+    {id:"t14",name:"前菜の盛り合わせ",desc:"Appetizer Plate",cat:"tapas"},
+    {id:"t15",name:"ベルギー風ポテトフライ",desc:"Belgian Fried Potatoes with Craftsman's Homemade Mayonnaise",cat:"tapas",featured:true},
+    {id:"t16",name:"魚介のフリット盛り合わせ",desc:"Seafood Fritters",cat:"tapas"},
+    {id:"t17",name:"トリッパ（牛もつ）のスパイス煮込み",desc:"Beef Innards and Spice Stew",cat:"tapas"},
+    {id:"t18",name:"いろいろ貝のワイン蒸し",desc:"Various Clams Steamed in Wine",cat:"tapas"},
+    {id:"t19",name:"青森にんにくとホルモンの辛アヒージョ",desc:"Spicy Ajijo with Aomori Garlic and Pork Innards",cat:"tapas"},
+  ]},
+  fish:{label:"🐟 Fish",items:[
+    {id:"f1",name:"殻付き生牡蠣",desc:"Raw Oysters with Shells",cat:"fish"},
+    {id:"f2",name:"いろいろ貝のワイン蒸し",desc:"Various Clams Steamed in Wine",cat:"fish"},
+    {id:"f3",name:"本日のカルパッチョ",desc:"Carpaccio of the Day",cat:"fish"},
+    {id:"f4",name:"魚介のフリット盛り合わせ",desc:"Seafood Fritters",cat:"fish"},
+    {id:"f5",name:"三陸沖の鮮魚 アクアパッツァ",desc:"Acqua Pazza — Fresh Fish from the Sanriku Sea",cat:"fish"},
+    {id:"f6",name:"三陸沖の鮮魚 宮城にんにくと香草グリル",desc:"Grilled with Miyagi Garlic and Herbs",cat:"fish"},
+  ]},
+  meat:{label:"🥩 Meat",items:[
+    {id:"m1",name:"自家製ソーセージの炭火焼き",desc:"Grilled Homemade Sausage",cat:"meat"},
+    {id:"m2",name:"本日のビステッカ（国産牛の炭火焼き）",desc:"Bistecca — Beef Steak of the Day",cat:"meat"},
+    {id:"m3",name:"クラフトマンの唐揚げ",desc:"Craftsman's Fried Chicken",cat:"meat"},
+    {id:"m4",name:"トリッパ（牛もつ）のスパイス煮込み",desc:"Beef Innards and Spice Stew",cat:"meat"},
+    {id:"m5",name:"シェフのおすすめ肉料理（季節）",desc:"Chef's Recommended Meat Dishes — Seasonal",cat:"meat"},
+  ]},
+  pizza:{label:"🍕 Pizza",items:[
+    {id:"p1",name:"マルゲリータ",desc:"トマト・モッツァレラ・バジリコ",cat:"pizza",featured:true},
+    {id:"p2",name:"ビスマルク",desc:"5種のキノコと温泉卵",cat:"pizza",featured:true},
+    {id:"p3",name:"プロシュート",desc:"生ハムとサラダ",cat:"pizza",featured:true},
+    {id:"p4",name:"マリナーラ",desc:"アンチョビ・オリーブ・焼きなす",cat:"pizza",featured:true},
+    {id:"p5",name:"クアトロフォルマッジ",desc:"4種のチーズ",cat:"pizza",featured:true},
+    {id:"p6",name:"アボカドと海老",desc:"Avocado and Shrimp",cat:"pizza",featured:true},
+    {id:"p7",name:"仙台牛とトリュフの包みピッツァ",desc:"Calzone with Sendai Beef and Truffle",cat:"pizza",featured:true},
+    {id:"p8",name:"トリュフ",desc:"Truffle Pizza",cat:"pizza",featured:true},
+    {id:"p9",name:"モルタデラハム、温泉卵",desc:"Mortadella Ham and Soft Boiled Egg",cat:"pizza",featured:true},
+    {id:"p10",name:"今月の旬のピッツァ",desc:"Pizza in Season of the Month",cat:"pizza",featured:true},
+    {id:"p11",name:"春野菜と桜エビの空豆クリームソースピッツァ【季節】",desc:"空豆クリームソース・東北春野菜（菜の花・アスパラ菜・空豆）・桜エビ",cat:"pizza",featured:true,season:true},
+  ]},
+  other:{label:"🍔 Burger & Quesadilla",items:[
+    {id:"o1",name:"グリルマッシュルーム＆ベルジャンフリッツ",desc:"仙台牛100% Grilled Mushrooms Burger and Belgian Fries",cat:"other"},
+    {id:"o2",name:"チーズ＆ベルジャンフリッツ",desc:"仙台牛100% Cheese Burger and Belgian Fries",cat:"other"},
+    {id:"o3",name:"ラム肉とグリルマッシュルームのケセディア",desc:"Lamb and Grilled Mushrooms Quesadilla",cat:"other"},
+    {id:"o4",name:"チキンとナスのケセディア",desc:"Chicken and Eggplant Quesadilla",cat:"other"},
+  ]},
+};
+
+const beerCatLabels={local:"地元ビール",japanese:"Japanese",lager:"Lager / Golden",wheat:"White / Wheat",fruit:"Fruit",pale:"Pale Ale",ipa:"IPA",black:"Black Beer",special:"Special / Saison",cider:"Cider"};
+const beerCatOrder=["local","japanese","lager","wheat","fruit","pale","ipa","black","special","cider"];
+const beerListText=beers.map(b=>`${b.num} ${b.name} (${b.style}, ABV ${b.abv}%, ${b.origin})`).join("\n");
+
+const priorityInstruction=`
+【優先度の高い料理（必ず1品以上ペアリングに含めること）】
+最優先: 季節メニュー — 春キャベツのポテトサラダ、砂肝コンフィと蕗のとう、ホタルイカとウドのマリネ、本日の鮮魚のカルパッチョ、山形キウイのグリーンサラダ、東北野菜のグリル、山菜といわいどりのペペロンチーノ、青森ベビーホタテのクリームパスタ、春野菜と桜エビの空豆クリームソースピッツァ
+優先: ベルギー風ポテトフライ（自家製マヨネーズ添え）
+優先: 窯焼きピッツァ各種（マルゲリータ、ビスマルク、プロシュート、マリナーラ、クアトロフォルマッジ、アボカドと海老、仙台牛とトリュフ、トリュフ、モルタデラハム温泉卵、旬のピッツァ）`;
+
+let currentMode="beer",currentBeerCat="all",currentFoodCat="all";
+
+function setMode(m){currentMode=m;document.getElementById('btn-beer').classList.toggle('active',m==='beer');document.getElementById('btn-food').classList.toggle('active',m==='food');render();}
+function setBeerCat(c){currentBeerCat=c;renderBeerMode();}
+function setFoodCat(c){currentFoodCat=c;renderFoodMode();}
+function render(){currentMode==='beer'?renderBeerMode():renderFoodMode();}
+
+function renderBeerMode(){
+  document.getElementById('filter-bar').innerHTML=`<div class="filters"><button class="filter-btn ${currentBeerCat==='all'?'active':''}" onclick="setBeerCat('all')">すべて</button>${beerCatOrder.map(c=>`<button class="filter-btn ${currentBeerCat===c?'active':''}" onclick="setBeerCat('${c}')">${beerCatLabels[c]}</button>`).join('')}</div>`;
+  const mc=document.getElementById('main-content');mc.innerHTML='';
+  const cats=currentBeerCat==='all'?beerCatOrder:[currentBeerCat];
+  cats.forEach(cat=>{
+    const items=beers.filter(b=>b.cat.includes(cat)&&(cat!=='local'||b.cat.includes('local')));
+    if(!items.length)return;
+    if(currentBeerCat==='all'){const t=document.createElement('div');t.className='section-title';t.textContent=beerCatLabels[cat];mc.appendChild(t);}
+    const g=document.createElement('div');g.className='grid';if(currentBeerCat!=='all')g.style.marginTop='16px';
+    items.forEach(b=>g.appendChild(makeBeerCard(b)));mc.appendChild(g);
+  });
+}
+
+function renderFoodMode(){
+  const cats=Object.keys(foods);
+  document.getElementById('filter-bar').innerHTML=`<div class="filters"><button class="filter-btn ${currentFoodCat==='all'?'active':''}" onclick="setFoodCat('all')">すべて</button>${cats.map(c=>`<button class="filter-btn ${currentFoodCat===c?'active':''}" onclick="setFoodCat('${c}')">${foods[c].label}</button>`).join('')}</div>`;
+  const mc=document.getElementById('main-content');mc.innerHTML='';
+  const show=currentFoodCat==='all'?cats:[currentFoodCat];
+  show.forEach(cat=>{
+    const sec=foods[cat];
+    const t=document.createElement('div');t.className='section-title';
+    t.innerHTML=sec.label+(cat==='season'?` <span class="season-badge">季節限定</span>`:'');
+    mc.appendChild(t);
+    const g=document.createElement('div');g.className='grid';
+    sec.items.forEach(f=>g.appendChild(makeFoodCard(f)));mc.appendChild(g);
+  });
+}
+
+function makeBeerCard(b){
+  const isLocal=b.cat.includes('local');
+  const d=document.createElement('div');d.className='card';
+  d.innerHTML=`<div class="card-top"><span class="card-num">${b.num}</span><div class="badges">${isLocal?'<span class="badge b-local">地元</span>':''}${b.rare?'<span class="badge b-rare">Rare</span>':''}${b.special&&!b.rare?'<span class="badge b-special">Special</span>':''}</div></div><div class="card-name">${b.name}</div><div class="card-sub">${b.ja}</div><div class="card-footer"><span class="card-tag">${b.style}</span><span class="card-tag">${b.origin}</span><span class="card-abv">${b.abv}%</span></div><div class="tap-hint">タップして料理を探す →</div>`;
+  d.onclick=()=>openBeerModal(b);return d;
+}
+
+function makeFoodCard(f){
+  const isSeason=f.cat==='season'||f.season;
+  const d=document.createElement('div');
+  d.className='card'+(isSeason?' season':f.featured?' featured':'');
+  d.innerHTML=`<div class="card-top"><div></div><div class="badges">${isSeason?'<span class="badge b-season">季節</span>':''}${f.featured&&!isSeason?'<span class="badge b-pick">おすすめ</span>':''}</div></div><div class="card-name">${f.name}</div><div class="card-sub">${f.desc}</div><div class="tap-hint">タップしてビールを探す →</div>`;
+  d.onclick=()=>openFoodModal(f);return d;
+}
+
+async function openBeerModal(b){
+  document.getElementById('overlay').classList.add('active');
+  document.getElementById('m-name').textContent=b.name;
+  document.getElementById('m-sub').textContent=b.ja;
+  const isLocal=b.cat.includes('local');
+  document.getElementById('m-meta').innerHTML=`<span class="meta-chip">${b.style}</span><span class="meta-chip">${b.origin}</span><span class="meta-chip">Alc. ${b.abv}%</span>${isLocal?'<span class="meta-chip" style="background:#E8F4E8;color:#2D6A2D;">地元ビール</span>':''}${b.rare?'<span class="meta-chip" style="background:#1A1510;color:#C8861A;">Rare</span>':''}`;
+  document.getElementById('m-ai').innerHTML=`<div class="ai-loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span style="margin-left:6px;font-size:13px;color:var(--muted)">AIがペアリングを考えています...</span></div>`;
+
+  const allFoods=Object.values(foods).flatMap(s=>s.items).map(f=>`- ${f.name}（${f.desc}）${f.cat==='season'?'【季節★最優先】':f.featured?'【ポテトフライ or 窯焼きピザ★優先】':''}`).join('\n');
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1400,
+        system:`あなたはCRAFTSMAN Sendaiのビール×イタリアンのペアリング専門家です。
+以下のJSON形式のみで返答してください。他テキスト・Markdownは一切含めないでください。
+{
+  "beer_desc": "このビールの味わい（お客様へ語りかける口調で2文）",
+  "aroma": ["香り1","香り2","香り3"],
+  "flavors": {"苦味":0〜10,"甘味":0〜10,"酸味":0〜10,"コク":0〜10},
+  "pairings": [
+    {"name":"料理名（メニューから選ぶ）","dish_desc":"この料理の特徴と見どころ（お客様への説明として1〜2文）","reason":"このビールとの相性の理由（1〜2文）","priority":"best"},
+    {"name":"料理名","dish_desc":"...","reason":"...","priority":"good"},
+    {"name":"料理名","dish_desc":"...","reason":"...","priority":"good"}
+  ]
+}
+priorityは最もおすすめの1品に"best"、他は"good"。
+${priorityInstruction}`,
+        messages:[{role:'user',content:`ビール: ${b.name} (${b.style}, ABV ${b.abv}%, ${b.origin})\n\n当店の料理メニュー:\n${allFoods}`}]})});
+    const data=await res.json();
+    const info=JSON.parse(data.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim());
+    renderBeerResult(info);
+  }catch(e){document.getElementById('m-ai').innerHTML=`<p style="font-size:13px;color:#c0392b;padding:8px 0">読み込みに失敗しました。再度お試しください。</p>`;}
+}
+
+async function openFoodModal(f){
+  document.getElementById('overlay').classList.add('active');
+  document.getElementById('m-name').textContent=f.name;
+  document.getElementById('m-sub').textContent=f.desc;
+  const isSeason=f.cat==='season'||f.season;
+  const catLabel={season:'季節',tapas:'タパス',fish:'Fish',meat:'Meat',pizza:'Pizza',other:'Burger/Quesadilla'}[f.cat];
+  document.getElementById('m-meta').innerHTML=`${isSeason?'<span class="meta-chip" style="background:var(--amber);color:#fff;">季節メニュー</span>':''}${f.featured&&!isSeason?'<span class="meta-chip" style="background:#1A1510;color:#fff;">おすすめ</span>':''}<span class="meta-chip">${catLabel}</span>`;
+  document.getElementById('m-ai').innerHTML=`<div class="ai-loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span style="margin-left:6px;font-size:13px;color:var(--muted)">AIがビールを探しています...</span></div>`;
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1400,
+        system:`あなたはCRAFTSMAN Sendaiのビール×イタリアンのペアリング専門家です。
+以下のJSON形式のみで返答してください。他テキスト・Markdownは一切含めないでください。
+{
+  "food_note": "この料理の魅力と特徴（お客様へ語りかける口調で1〜2文）",
+  "pairings": [
+    {
+      "beer_num": "番号",
+      "beer_name": "ビール名",
+      "style": "スタイル",
+      "abv": "X.X%",
+      "beer_desc": "このビールの味わいと特徴（1〜2文）",
+      "aroma": ["香り1","香り2"],
+      "flavors": {"苦味":0〜10,"甘味":0〜10,"酸味":0〜10,"コク":0〜10},
+      "reason": "この料理との相性の理由（1〜2文）",
+      "priority": "best"
+    },
+    {"beer_num":"...","beer_name":"...","style":"...","abv":"...","beer_desc":"...","aroma":[],"flavors":{},"reason":"...","priority":"good"},
+    {"beer_num":"...","beer_name":"...","style":"...","abv":"...","beer_desc":"...","aroma":[],"flavors":{},"reason":"...","priority":"good"}
+  ]
+}
+priorityは最もおすすめの1品に"best"、他は"good"。ビールリストから正確に選んでください。`,
+        messages:[{role:'user',content:`料理: ${f.name}\n説明: ${f.desc}\n\n当店のビールリスト:\n${beerListText}`}]})});
+    const data=await res.json();
+    const info=JSON.parse(data.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim());
+    renderFoodResult(info);
+  }catch(e){document.getElementById('m-ai').innerHTML=`<p style="font-size:13px;color:#c0392b;padding:8px 0">読み込みに失敗しました。再度お試しください。</p>`;}
+}
+
+function flBars(flavors){
+  return`<div class="fl-grid">${Object.entries(flavors).map(([n,v])=>`<div class="fl-row"><span class="fl-label">${n}</span><div class="fl-track"><div class="fl-fill" style="width:${v*10}%"></div></div><span class="fl-val">${v}</span></div>`).join('')}</div>`;
+}
+
+function renderBeerResult(info){
+  const cards=info.pairings.map(p=>`
+    <div class="pair-card${p.priority==='best'?' best':''}">
+      ${p.priority==='best'?'<div class="pair-best-label">⭐ BEST PAIRING</div>':''}
+      <div class="pair-name">${p.name}</div>
+      <div class="pair-desc">${p.dish_desc}</div>
+      <div class="pair-reason-label">このビールとの相性</div>
+      <div class="pair-reason">${p.reason}</div>
+    </div>`).join('');
+  document.getElementById('m-ai').innerHTML=`
+    <div class="ai-block"><div class="ai-label">味わい</div><div class="ai-text">${info.beer_desc}</div></div>
+    <div class="ai-block"><div class="ai-label">香り</div><div class="tag-row">${info.aroma.map(a=>`<span class="tag-amber">${a}</span>`).join('')}</div></div>
+    <div class="ai-block"><div class="ai-label">フレーバーバランス</div>${flBars(info.flavors)}</div>
+    <hr class="divider">
+    <div class="ai-block"><div class="ai-label">おすすめ料理ペアリング</div>${cards}</div>`;
+}
+
+function renderFoodResult(info){
+  const cards=info.pairings.map(p=>`
+    <div class="pair-card${p.priority==='best'?' best':''}">
+      ${p.priority==='best'?'<div class="pair-best-label">⭐ BEST PAIRING</div>':''}
+      <div class="pair-name">${p.beer_num} ${p.beer_name}</div>
+      <div class="pair-style">${p.style} / Alc. ${p.abv}</div>
+      <div class="pair-desc">${p.beer_desc}</div>
+      <div class="tag-row" style="margin-bottom:10px">${(p.aroma||[]).map(a=>`<span class="tag-amber">${a}</span>`).join('')}</div>
+      ${p.flavors&&Object.keys(p.flavors).length?flBars(p.flavors):''}
+      <div class="pair-reason-label" style="margin-top:10px">この料理との相性</div>
+      <div class="pair-reason">${p.reason}</div>
+    </div>`).join('');
+  document.getElementById('m-ai').innerHTML=`
+    <div class="ai-block"><div class="ai-label">この料理について</div><div class="ai-text">${info.food_note}</div></div>
+    <hr class="divider">
+    <div class="ai-block"><div class="ai-label">おすすめビールペアリング</div>${cards}</div>`;
+}
+
+function closeModal(e){if(e&&e.target!==document.getElementById('overlay'))return;document.getElementById('overlay').classList.remove('active');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('overlay').classList.remove('active');});
+render();
+</script>
+</body>
+</html>
