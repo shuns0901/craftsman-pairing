@@ -229,7 +229,7 @@ const priorityInstruction=`
 優先: ベルギー風ポテトフライ（自家製マヨネーズ添え）
 優先: 窯焼きピッツァ各種（マルゲリータ、ビスマルク、プロシュート、マリナーラ、クアトロフォルマッジ、アボカドと海老、仙台牛とトリュフ、トリュフ、モルタデラハム温泉卵、旬のピッツァ）`;
 
-const GEMINI_KEY='あなたの新しいAPIキーをここに入力';
+const GEMINI_KEY='AQ.Ab8RN6I8jkpJuw5ZKi23csEroYKwZmPS6afC5-iwGJ_HfJ5O-g';
 
 async function callGemini(systemPrompt, userMessage){
   const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,{
